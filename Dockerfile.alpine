@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+ARG TARGETARCH
+
+RUN apk --no-cache add ca-certificates tzdata
+
+WORKDIR /app
+
+COPY zbproxy-${TARGETARCH} zbproxy
+
+RUN chmod +x zbproxy
+
+EXPOSE 25565
+
+CMD ["./zbproxy"]
