@@ -147,8 +147,18 @@ func LoadConfigFromFile(ctx context.Context, filePath string, watch bool, logger
 				Router: Router{
 					Rules: []*Rule{
 						{
-							Type:  "always",
+							Type:  RuleTypeAlways,
 							Sniff: jsonx.Listable[string]{"minecraft"},
+						},
+						{
+							Type:      RuleTypeServiceName,
+							Parameter: json.RawMessage("\"Hypixel-in\""),
+							Rewrite: RuleRewrite{
+								Minecraft: &ruleRewriteMinecraft{
+									Hostname: "mc.hypixel.net",
+									Port:     25565,
+								},
+							},
 						},
 					},
 					DefaultOutbound: "Hypixel-out",
@@ -159,7 +169,6 @@ func LoadConfigFromFile(ctx context.Context, filePath string, watch bool, logger
 						TargetAddress: "mc.hypixel.net",
 						TargetPort:    25565,
 						Minecraft: &MinecraftService{
-							EnableHostnameRewrite: true,
 							OnlineCount: onlineCount{
 								Max:    20,
 								Online: -1,
